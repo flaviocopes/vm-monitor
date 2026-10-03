@@ -43,7 +43,7 @@ Don't open the app on your own screen to check a change. Test it in the VM with 
 - Edit `bin/testvm` by writing a new file and moving it over the old one. Bash reads a script while it runs, and agents run `testvm` all the time.
 - The VM screenshot goes to `/tmp/vm-monitor.jpg` in the VM, never to `testvm`'s files, so it can't clash with an agent's `testvm shot`.
 - Screenshots live in `/tmp/testvm` on the Mac, which macOS empties when it restarts. The app shows a placeholder for the ones that are gone.
-- Versions follow semver: a minor release (1.1.0) for new features, a point release (1.0.1) for bug fixes. The version lives in `Scripts/build-app.sh`.
+- Versions follow semver: a minor release (1.1.0) for new features, a point release (1.0.1) for bug fixes. The version lives in `Sources/VMMonitorApp/Version.swift`.
 - The updater trusts the GitHub release. Every release needs its `vX.Y.Z` tag, the zip from `Scripts/build-release.sh` attached, and an app version that matches the tag, or the app refuses the update.
 - Releases are signed with Flavio Copes's Developer ID (team `DGFKNTAG99`) with the hardened runtime, and notarized by `Scripts/build-release.sh` when the certificate is in the keychain and a notarytool profile named `notary` exists. CI and forks have no certificate, so the scripts sign ad hoc there and skip notarization.
 - The app isn't sandboxed, because it reads the agents' transcripts and runs `ssh` and `tart`.

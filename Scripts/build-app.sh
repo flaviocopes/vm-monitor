@@ -4,8 +4,8 @@
 
 set -eu
 
-VERSION=1.0.0
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+VERSION=$(sed -n 's/^ *static let version = "\(.*\)"$/\1/p' "$ROOT/Sources/VMMonitorApp/Version.swift")
 APP="$ROOT/dist/VM Monitor.app"
 CONTENTS="$APP/Contents"
 ICON_SOURCE="$ROOT/Assets/AppIcon.png"

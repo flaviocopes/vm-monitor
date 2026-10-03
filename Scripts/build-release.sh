@@ -8,7 +8,7 @@ set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-VERSION=$(sed -n 's/^VERSION=//p' Scripts/build-app.sh)
+VERSION=$(sed -n 's/^ *static let version = "\(.*\)"$/\1/p' Sources/VMMonitorApp/Version.swift)
 APP="$ROOT/dist/VM Monitor.app"
 ZIP="$ROOT/dist/VM-Monitor-$VERSION.zip"
 CHECK=$(mktemp -d)
