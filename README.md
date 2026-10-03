@@ -4,6 +4,10 @@ VM Monitor shows what your coding agents do in a macOS test VM. You see the VM's
 
 I let coding agents test my Mac apps in a virtual machine, so they never take over my screen while I work. The catch is that I couldn't see what they did in there, or notice when two of them were in the VM at the same time. VM Monitor is the window into that VM.
 
+Here's VM Monitor in 30 seconds:
+
+[![Watch the 30-second VM Monitor demo](docs/showreel-poster.jpg)](https://flaviocopes.com/images/vm-monitor/demo.mp4)
+
 ## Download
 
 Get `VM-Monitor-1.0.0.zip` from the [latest release](https://github.com/flaviocopes/vm-monitor/releases/latest), unzip it, and drag VM Monitor to your Applications folder. It runs on macOS 15 Sequoia or later, on Apple silicon and Intel Macs.
