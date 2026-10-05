@@ -2,7 +2,7 @@
 
 A SwiftUI Mac app that shows what coding agents do in a macOS test VM. Agents drive the VM with `bin/testvm`, which logs every command. The app reads that log, finds each chat's prompt in the agents' transcripts, and grabs the VM's screen over SSH. A Swift package with no dependencies.
 
-- `bin/testvm`: the command agents use to open, screenshot and click through Mac apps in the VM. It writes `~/Library/Logs/testvm/activity.jsonl` and `runs/<id>.txt`, the files the app reads.
+- `bin/testvm`: the command agents use to open, screenshot and click through Mac apps in the VM. It writes `~/Library/Logs/testvm/activity.jsonl` and `runs/<id>.txt`, the files the app reads. The agent-ready capabilities manifest lives in `bin/testvm`; bump `VERSION` there and add a changelog entry on every release.
 - `Sources/MonitorCore`: everything that isn't UI, with tests.
   - `Run.swift`: `LogEvent` (one line of the log), `Agent`, `Run` (one command, from its start and end lines) and `RunState`. A run without an end line is running while its pid lives, for at most 30 minutes. Exit 130 and 143 mean Ctrl-C or the agent's timeout stopped it.
   - `Activity.swift`: builds runs from events, and groups them into `Session`s (one per chat) and `AppInfo`s. Clicks, keys, typing and scripts belong to the app the same chat named last.

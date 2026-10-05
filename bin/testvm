@@ -3,6 +3,110 @@
 # so testing never takes over this screen. Run `testvm help` for the commands.
 set -euo pipefail
 
+VERSION="1.0.0"
+
+usage() {
+  cat <<'EOF'
+testvm: run and test Mac app builds in the test VM instead of on this screen
+
+  testvm open <App.app> [args]   copy the build into the VM, launch it, wait for a window
+  testvm open <Name>             relaunch an app already copied into the VM
+  testvm shot [Name] [out.png]   screenshot the whole VM screen, or just Name's front window
+  testvm ui <Name>               list the app's controls with text and click coordinates
+  testvm click <x> <y>           click at screen coordinates (points)
+  testvm type <text>             type text into the frontmost app
+  testvm key <combo>             press keys: cmd+n, cmd+shift+s, return, esc, arrow-down
+  testvm script [args]           run AppleScript from stdin in the VM (System Events, menus)
+  testvm quit <Name>             quit the app
+  testvm logs <Name>             print the app's stdout/stderr since it was launched
+  testvm push <local> [remote]   copy files or folders into the VM (default: home folder)
+  testvm pull <remote> [local]   copy files out of the VM
+  testvm run <command>           run a shell command in the VM
+  testvm ssh                     open an interactive shell in the VM
+  testvm start | stop | status   manage the VM (other commands start it when needed)
+  testvm setup                   download and configure the VM from scratch
+  testvm note <text>             say what you're testing, shown in VM Monitor
+  testvm capabilities [--json]   summary and task list for agents
+
+Every command is logged to ~/Library/Logs/testvm/activity.jsonl with the agent that ran it.
+EOF
+}
+
+capabilities_json() {
+  cat <<JSON
+{
+  "name": "testvm",
+  "version": "$VERSION",
+  "summary": "Runs Mac app builds in a headless test VM so agents can launch, screenshot and click without taking over Flavio's screen.",
+  "capabilities": [
+    { "description": "Open an app build in the test VM", "command": "testvm open build/Build/Products/Debug/Skillscout.app" },
+    { "description": "Screenshot an app's window for visual checks", "command": "testvm shot Skillscout" },
+    { "description": "List UI controls with labels and click coordinates", "command": "testvm ui Skillscout" },
+    { "description": "Click at screen coordinates in the VM", "command": "testvm click 255 200" },
+    { "description": "Type text into the frontmost app", "command": "testvm type flavioify" },
+    { "description": "Press a keyboard shortcut or special key", "command": "testvm key cmd+n" },
+    { "description": "Copy test data or files into the VM", "command": "testvm push ~/.cursor/projects/Users-flaviocopes-dev-skillscout/agent-transcripts/ .cursor/projects/Users-flaviocopes-dev-skillscout/agent-transcripts/" },
+    { "description": "Tell VM Monitor what you are testing", "command": "testvm note 'Checking the new Sort by usage menu in Skillscout'" },
+    { "description": "Check whether the test VM is running", "command": "testvm status" }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-03",
+      "changes": [
+        "Launch, screenshot and drive Mac apps in a headless macOS VM under Tart",
+        "Log every command with agent and chat metadata for VM Monitor",
+        "Copy files in and out, run shell commands, and open an SSH shell in the VM"
+      ]
+    }
+  ]
+}
+JSON
+}
+
+print_capabilities() {
+  echo "testvm $VERSION"
+  echo "Runs Mac app builds in a headless test VM so agents can launch, screenshot and click without taking over Flavio's screen."
+  echo
+  echo "What it can do:"
+  echo "  Open an app build in the test VM"
+  echo "    \$ testvm open build/Build/Products/Debug/Skillscout.app"
+  echo "  Screenshot an app's window for visual checks"
+  echo "    \$ testvm shot Skillscout"
+  echo "  List UI controls with labels and click coordinates"
+  echo "    \$ testvm ui Skillscout"
+  echo "  Click at screen coordinates in the VM"
+  echo "    \$ testvm click 255 200"
+  echo "  Type text into the frontmost app"
+  echo "    \$ testvm type flavioify"
+  echo "  Press a keyboard shortcut or special key"
+  echo "    \$ testvm key cmd+n"
+  echo "  Copy test data or files into the VM"
+  echo "    \$ testvm push ~/.cursor/projects/Users-flaviocopes-dev-skillscout/agent-transcripts/ .cursor/projects/Users-flaviocopes-dev-skillscout/agent-transcripts/"
+  echo "  Tell VM Monitor what you are testing"
+  echo "    \$ testvm note 'Checking the new Sort by usage menu in Skillscout'"
+  echo "  Check whether the test VM is running"
+  echo "    \$ testvm status"
+  echo
+  echo "Changes:"
+  echo "  1.0.0 (2026-10-03)"
+  echo "    - Launch, screenshot and drive Mac apps in a headless macOS VM under Tart"
+  echo "    - Log every command with agent and chat metadata for VM Monitor"
+  echo "    - Copy files in and out, run shell commands, and open an SSH shell in the VM"
+}
+
+case "${1:-help}" in
+  help|-h|--help) usage; exit 0 ;;
+  --version|-V) echo "testvm $VERSION"; exit 0 ;;
+  capabilities)
+    shift || true
+    want_json=false
+    for arg in "$@"; do [ "$arg" = --json ] && want_json=true; done
+    if $want_json; then capabilities_json; else print_capabilities; fi
+    exit 0
+    ;;
+esac
+
 VM=mac-test
 IMAGE=ghcr.io/cirruslabs/macos-sequoia-base:latest
 TEST_HOST=""
@@ -386,32 +490,6 @@ end_run() {
     "$RUN_ID" "$(now)" "$status" "$(json "$last")" >> "$ACTIVITY" 2>/dev/null || true
 }
 
-usage() {
-  cat <<'EOF'
-testvm: run and test Mac app builds in the test VM instead of on this screen
-
-  testvm open <App.app> [args]   copy the build into the VM, launch it, wait for a window
-  testvm open <Name>             relaunch an app already copied into the VM
-  testvm shot [Name] [out.png]   screenshot the whole VM screen, or just Name's front window
-  testvm ui <Name>               list the app's controls with text and click coordinates
-  testvm click <x> <y>           click at screen coordinates (points)
-  testvm type <text>             type text into the frontmost app
-  testvm key <combo>             press keys: cmd+n, cmd+shift+s, return, esc, arrow-down
-  testvm script [args]           run AppleScript from stdin in the VM (System Events, menus)
-  testvm quit <Name>             quit the app
-  testvm logs <Name>             print the app's stdout/stderr since it was launched
-  testvm push <local> [remote]   copy files or folders into the VM (default: home folder)
-  testvm pull <remote> [local]   copy files out of the VM
-  testvm run <command>           run a shell command in the VM
-  testvm ssh                     open an interactive shell in the VM
-  testvm start | stop | status   manage the VM (other commands start it when needed)
-  testvm setup                   download and configure the VM from scratch
-  testvm note <text>             say what you're testing, shown in VM Monitor
-
-Every command is logged to ~/Library/Logs/testvm/activity.jsonl with the agent that ran it.
-EOF
-}
-
 dispatch() {
   case "$cmd" in
   setup) setup ;;
@@ -442,7 +520,6 @@ dispatch() {
 
 cmd="${1:-help}"; shift || true
 case "$cmd" in
-  help|-h|--help) usage; exit 0 ;;
   setup|start|stop|status|open|install|quit|shot|ui|click|type|key|script|logs|push|pull|run|ssh|note) ;;
   *) usage; exit 1 ;;
 esac
