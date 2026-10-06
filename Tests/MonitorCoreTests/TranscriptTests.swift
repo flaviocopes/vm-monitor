@@ -115,4 +115,13 @@ import Testing
     #expect(target.user == "admin")
     #expect(target.name == "Test VM")
   }
+
+  @Test func checksTheHostKeyOfAnotherMacOnly() {
+    var target = VMTarget(key: URL(filePath: "/tmp/testvm_ed25519"))
+    #expect(VM.sshArguments(target, address: "192.168.64.3").contains("StrictHostKeyChecking=no"))
+    target.host = "mini.local"
+    let arguments = VM.sshArguments(target, address: "mini.local")
+    #expect(arguments.contains("StrictHostKeyChecking=accept-new"))
+    #expect(!arguments.contains("UserKnownHostsFile=/dev/null"))
+  }
 }

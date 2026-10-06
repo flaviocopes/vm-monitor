@@ -76,9 +76,13 @@ public enum VM {
   }
 
   /// The same options as `testvm`, so the app shares its SSH connection instead of opening new ones.
+  /// The VM's address changes between restarts, so only another Mac gets its host key checked.
   static func sshArguments(_ target: VMTarget, address: String) -> [String] {
-    [
-      "-i", target.key.path, "-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null",
+    let hostKey =
+      target.host == nil
+      ? ["-o", "StrictHostKeyChecking=no", "-o", "UserKnownHostsFile=/dev/null"]
+      : ["-o", "StrictHostKeyChecking=accept-new"]
+    return ["-i", target.key.path] + hostKey + [
       "-o", "LogLevel=ERROR", "-o", "ConnectTimeout=5", "-o", "BatchMode=yes", "-o", "ControlMaster=auto",
       "-o", "ControlPath=/tmp/testvm-ssh-%C", "-o", "ControlPersist=10m", "\(target.user)@\(address)"
     ]

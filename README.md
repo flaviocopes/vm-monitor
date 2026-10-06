@@ -30,13 +30,13 @@ defaults write com.flaviocopes.vm-monitor AppUpdaterAutomaticChecks -bool false
 
 ## Set up the test VM
 
-VM Monitor watches a VM driven by `testvm`, a shell script in this repo. Agents use it to open, screenshot and click through your app in the VM, and it logs every command they run. The VM runs under [Tart](https://tart.run), which needs an Apple silicon Mac.
+VM Monitor watches a VM driven by [testvm](https://github.com/flaviocopes/testvm), a shell script with its own repo. Agents use it to open, screenshot and click through your app in the VM, and it logs every command they run. The VM runs under [Tart](https://tart.run), which needs an Apple silicon Mac.
 
 Install Tart, then put `testvm` somewhere in your `PATH`:
 
 ```sh
 brew install cirruslabs/cli/tart
-curl -o /opt/homebrew/bin/testvm https://raw.githubusercontent.com/flaviocopes/vm-monitor/main/bin/testvm
+curl -Lo /opt/homebrew/bin/testvm https://github.com/flaviocopes/testvm/releases/latest/download/testvm
 chmod +x /opt/homebrew/bin/testvm
 ```
 
@@ -56,7 +56,7 @@ or click through it on this Mac. Do all of that in the test VM with `testvm`.
 Start with `testvm note` to say what you're testing.
 ```
 
-To test on a real Mac instead, like a Mac mini on your network, put `TEST_HOST=mini.local` and `TEST_USER=<you>` in `~/.config/testvm/config`. `testvm` and VM Monitor both use it.
+To test on a real Mac instead, like a Mac mini on your network, put `TEST_HOST=mini.local` and `TEST_USER=<you>` in `~/.config/testvm/config`. `testvm` and VM Monitor both use it. The [testvm README](https://github.com/flaviocopes/testvm#test-on-another-mac) shows how to set up that Mac, and has an agent skill for `testvm`.
 
 ## Features
 

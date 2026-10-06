@@ -12,7 +12,7 @@ set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-TESTVM="$ROOT/bin/testvm"
+TESTVM=$(command -v testvm) || { echo "Install testvm first: https://github.com/flaviocopes/testvm" >&2; exit 1; }
 BUILD="$ROOT/.build/screenshot"
 APP="$BUILD/VM Monitor Screenshot.app"
 REMOTE=/tmp/vm-monitor-screenshot

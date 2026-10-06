@@ -1,8 +1,9 @@
 # VM Monitor
 
-A SwiftUI Mac app that shows what coding agents do in a macOS test VM. Agents drive the VM with `bin/testvm`, which logs every command. The app reads that log, finds each chat's prompt in the agents' transcripts, and grabs the VM's screen over SSH. A Swift package with no dependencies.
+A SwiftUI Mac app that shows what coding agents do in a macOS test VM. Agents drive the VM with `testvm`, which logs every command. The app reads that log, finds each chat's prompt in the agents' transcripts, and grabs the VM's screen over SSH. A Swift package with no dependencies.
 
-- `bin/testvm`: the command agents use to open, screenshot and click through Mac apps in the VM. It writes `~/Library/Logs/testvm/activity.jsonl` and `runs/<id>.txt`, the files the app reads. The agent-ready capabilities manifest lives in `bin/testvm`; bump `VERSION` there and add a changelog entry on every release.
+`testvm` has its own repo, [flaviocopes/testvm](https://github.com/flaviocopes/testvm). It writes `~/Library/Logs/testvm/activity.jsonl` and `runs/<id>.txt`, the files the app reads. Install it from there to work on this app.
+
 - `Sources/MonitorCore`: everything that isn't UI, with tests.
   - `Run.swift`: `LogEvent` (one line of the log), `Agent`, `Run` (one command, from its start and end lines) and `RunState`. A run without an end line is running while its pid lives, for at most 30 minutes. Exit 130 and 143 mean Ctrl-C or the agent's timeout stopped it.
   - `Activity.swift`: builds runs from events, and groups them into `Session`s (one per chat) and `AppInfo`s. Clicks, keys, typing and scripts belong to the app the same chat named last.
@@ -27,11 +28,11 @@ swift Scripts/render-banner.swift                  # docs/banner.png, from docs/
 swift Scripts/render-icon.swift Assets/AppIcon.png # after changing a constant
 ```
 
-Don't open the app on your own screen to check a change. Test it in the VM with `bin/testvm`, the way it's meant to be used:
+Don't open the app on your own screen to check a change. Test it in the VM with `testvm`, the way it's meant to be used:
 
 1. The VM has no Tart and no history. Give it its own SSH key to log into itself, generated inside the VM, and put `TEST_HOST=localhost` in the VM's `~/.config/testvm/config`. Never copy your own `testvm` key into the VM.
 2. Run `Scripts/sample-activity.py /tmp/vm-monitor-sample` and push its `Library/Logs/testvm/`, `.cursor/`, `.claude/` and `.codex/` folders to the VM's home. `images.txt` lists the screenshots the log points to. Push images to those paths in `/tmp/testvm/`.
-3. `bin/testvm open "dist/VM Monitor.app"`. The Live view shows the VM's own screen, with the app inside it.
+3. `testvm open "dist/VM Monitor.app"`. The Live view shows the VM's own screen, with the app inside it.
 4. Remove what you added. The VM's home can hold other test data, so delete only your files.
 
 `Scripts/screenshot.sh` does all of this for the README images, and cleans up after itself. Other agents can be using the VM, so pass it images of apps that are already public instead of capturing whatever is on the screen.
@@ -39,8 +40,8 @@ Don't open the app on your own screen to check a change. Test it in the VM with 
 ## Rules
 
 - The app only watches. It never clicks, types or opens anything in the VM, and never starts or stops it.
-- The log format is a contract between `bin/testvm` and `ActivityLog`. Change both together, and keep old lines readable: new fields are optional.
-- Edit `bin/testvm` by writing a new file and moving it over the old one. Bash reads a script while it runs, and agents run `testvm` all the time.
+- The log format is a contract between `testvm` and `ActivityLog`, across the two repos. Change both together, and keep old lines readable: new fields are optional.
+- `VM.sshArguments` uses the same SSH options and `ControlPath` as `testvm`, so they share one connection. Keep them in sync.
 - The VM screenshot goes to `/tmp/vm-monitor.jpg` in the VM, never to `testvm`'s files, so it can't clash with an agent's `testvm shot`.
 - Screenshots live in `/tmp/testvm` on the Mac, which macOS empties when it restarts. The app shows a placeholder for the ones that are gone.
 - Versions follow semver: a minor release (1.1.0) for new features, a point release (1.0.1) for bug fixes. The version lives in `Sources/VMMonitorApp/Version.swift`.
