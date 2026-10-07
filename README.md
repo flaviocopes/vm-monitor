@@ -10,7 +10,7 @@ Here's VM Monitor in 30 seconds:
 
 ## Download
 
-Get `VM-Monitor-1.0.0.zip` from the [latest release](https://github.com/flaviocopes/vm-monitor/releases/latest), unzip it, and drag VM Monitor to your Applications folder. It runs on macOS 15 Sequoia or later, on Apple silicon and Intel Macs.
+Get `VM-Monitor-1.1.0.zip` from the [latest release](https://github.com/flaviocopes/vm-monitor/releases/latest), unzip it, and drag VM Monitor to your Applications folder. It runs on macOS 15 Sequoia or later, on Apple silicon and Intel Macs.
 
 ### Opening it the first time
 
