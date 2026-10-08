@@ -62,7 +62,7 @@ To test on a real Mac instead, like a Mac mini on your network, put `TEST_HOST=m
 
 - **Live view.** The VM's screen, refreshed every 2 seconds while the window is visible. Under it, every agent that used the VM in the last 3 minutes, with the prompt of its chat, the note it left and the command it's running.
 - **A warning when agents overlap.** When two chats use the VM at once, a banner says so, because their clicks and keys go to whatever app is in front.
-- **Every command in plain words.** "Opened Skillscout", "Clicked “Find repeated tasks”", "Pressed ⌘A". A click gets the name of the control it hit, from the list of controls the agent read just before.
+- **Every command in plain words.** "Opened Skill Cabinet", "Clicked “Find repeated tasks”", "Pressed ⌘A". A click gets the name of the control it hit, from the list of controls the agent read just before.
 - **A timeline per chat and per app.** Each chat shows the prompt that started it. Each app shows who put the latest build in the VM.
 - **The whole story of a command.** Click one to see its screenshot, the exact command line, what it printed and who ran it.
 - **Search** across every command.
@@ -113,8 +113,8 @@ Working with an AI coding agent? Point it at [AGENTS.md](AGENTS.md). It has the 
 `testvm` writes two lines to `~/Library/Logs/testvm/activity.jsonl` for every command, one when it starts and one when it ends:
 
 ```json
-{"v":1,"event":"start","id":"20261003-190422-80779","time":1791047062.617,"pid":80779,"command":"shot","args":["Skillscout"],"cwd":"/Users/flavio/dev/skillscout","agent":"cursor","session":"01a3ecad-…","target":"vm"}
-{"v":1,"event":"end","id":"20261003-190422-80779","time":1791047062.883,"status":0,"last":"/tmp/testvm/Skillscout-190422.png"}
+{"v":1,"event":"start","id":"20261003-190422-80779","time":1791047062.617,"pid":80779,"command":"shot","args":["Skill Cabinet"],"cwd":"/Users/flavio/dev/skill-cabinet","agent":"cursor","session":"01a3ecad-…","target":"vm"}
+{"v":1,"event":"end","id":"20261003-190422-80779","time":1791047062.883,"status":0,"last":"/tmp/testvm/Skill Cabinet-190422.png"}
 ```
 
 It tells the agents apart from their environment. Cursor sets `CURSOR_CONVERSATION_ID` and Codex sets `CODEX_THREAD_ID`. Claude Code sets neither, so `testvm` looks for the `claude` process up the process tree. What a command prints goes to `runs/<id>.txt`. VM Peek reads the new lines every second, and finds each chat's first prompt in the agent's transcripts to say what it's working on.

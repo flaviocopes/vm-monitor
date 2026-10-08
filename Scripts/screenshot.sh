@@ -47,7 +47,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 PLIST
 codesign --force --sign - "$APP"
 
-python3 Scripts/sample-activity.py "$BUILD/sample" >/dev/null
+VM_HOME=$("$TESTVM" run 'printf "%s" "$HOME"')
+python3 Scripts/sample-activity.py "$BUILD/sample" "$VM_HOME" >/dev/null
 if [ -n "${1:-}" ]; then cp "$1" "$BUILD/screen.png"; else "$TESTVM" shot "" "$BUILD/screen.png" >/dev/null; fi
 mkdir -p "$BUILD/images"
 while IFS="$(printf '\t')" read -r app file; do

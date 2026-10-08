@@ -17,7 +17,7 @@ public enum Describe {
     ["click", "type", "key", "script", "shot"].contains(command)
   }
 
-  /// `build/Debug/Skillscout.app/` → `Skillscout`.
+  /// `build/Debug/Skill Cabinet.app/` → `Skill Cabinet`.
   public static func appName(_ pathOrName: String) -> String {
     var trimmed = pathOrName
     while trimmed.hasSuffix("/") { trimmed.removeLast() }

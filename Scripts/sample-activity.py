@@ -3,7 +3,7 @@
 four chats (Cursor, Claude Code, Codex and someone in a terminal), their transcripts, command output,
 and images.txt, the screenshots the log points to, one "App<TAB>/tmp/testvm/file.png" per line.
 
-Usage: Scripts/sample-activity.py /tmp/vm-monitor-sample
+Usage: Scripts/sample-activity.py /tmp/vm-monitor-sample [VM home folder]
 """
 
 import json
@@ -12,6 +12,7 @@ import sys
 import time
 
 out = sys.argv[1] if len(sys.argv) > 1 else "/tmp/vm-monitor-sample"
+vm_home = sys.argv[2] if len(sys.argv) > 2 else "/Users/admin"
 now = time.time()
 logs = os.path.join(out, "Library/Logs/testvm")
 os.makedirs(os.path.join(logs, "runs"), exist_ok=True)
@@ -60,7 +61,7 @@ cursor = {
     "prompt": "Add a Sort by usage option to the skills list in Skill Cabinet, so the skills I use most come first. Check it in the test VM.",
 }
 cursor["transcript"] = (
-    "/Users/flavio/.cursor/projects/Users-flavio-dev-skill-cabinet/agent-transcripts/"
+    f"{vm_home}/.cursor/projects/Users-flavio-dev-skill-cabinet/agent-transcripts/"
     f"{cursor['session']}/{cursor['session']}.jsonl"
 )
 claude = {
