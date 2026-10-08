@@ -5,11 +5,11 @@ struct VMMonitorApp: App {
   @State private var model = AppModel()
 
   init() {
-    AppUpdater.shared.start(repository: "flaviocopes/vm-monitor")
+    AppUpdater.shared.start(repository: "flaviocopes/vm-peek")
   }
 
   var body: some Scene {
-    WindowGroup("VM Monitor") {
+    WindowGroup("VM Peek") {
       ContentView()
         .environment(model)
         .frame(minWidth: 960, minHeight: 620)

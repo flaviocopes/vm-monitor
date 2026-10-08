@@ -1,4 +1,4 @@
-// Captures the real VM Monitor window in light and dark: the Live view into screenshot-<appearance>.png,
+// Captures the real VM Peek window in light and dark: the Live view into screenshot-<appearance>.png,
 // and a chat with one of its screenshots open into chat-<appearance>.png.
 // Scripts/screenshot.sh compiles it with the app's sources in place of the @main file and runs it in the
 // test VM, with the made-up history from Scripts/sample-activity.py.
@@ -20,7 +20,7 @@ enum Demo {
     model.vmState = .running(address: "192.168.64.3")
     model.screen = NSImage(contentsOf: screen)
     model.screenDate = .now
-    model.runningApps = ["NoteRepo"]
+    model.runningApps = ["Note Repo"]
     return model
   }()
 
@@ -57,7 +57,7 @@ enum Screenshot {
       backing: .buffered,
       defer: false
     )
-    window.title = "VM Monitor"
+    window.title = "VM Peek"
     window.toolbarStyle = .unified
     window.contentView = host
     window.center()

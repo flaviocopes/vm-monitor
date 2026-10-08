@@ -1,4 +1,4 @@
-# VM Monitor
+# VM Peek
 
 A SwiftUI Mac app that shows what coding agents do in a macOS test VM. Agents drive the VM with `testvm`, which logs every command. The app reads that log, finds each chat's prompt in the agents' transcripts, and grabs the VM's screen over SSH. A Swift package with no dependencies.
 
@@ -21,8 +21,8 @@ Requirements: macOS 15 or later, Swift 6.2 (Xcode 26).
 
 ```bash
 swift test                                         # must pass before committing
-Scripts/build-app.sh                               # universal dist/VM Monitor.app
-Scripts/build-release.sh                           # signs, notarizes and zips it into dist/VM-Monitor-<version>.zip
+Scripts/build-app.sh                               # universal dist/VM Peek.app
+Scripts/build-release.sh                           # signs, notarizes and zips it into dist/VM-Peek-<version>.zip
 Scripts/screenshot.sh <screen.png> <shots folder>  # docs/screenshot-*.png and docs/chat-*.png, rendered in the VM
 swift Scripts/render-banner.swift                  # docs/banner.png, from docs/screenshot-dark.png
 swift Scripts/render-icon.swift Assets/AppIcon.png # after changing a constant
@@ -32,7 +32,7 @@ Don't open the app on your own screen to check a change. Test it in the VM with 
 
 1. The VM has no Tart and no history. Give it its own SSH key to log into itself, generated inside the VM, and put `TEST_HOST=localhost` in the VM's `~/.config/testvm/config`. Never copy your own `testvm` key into the VM.
 2. Run `Scripts/sample-activity.py /tmp/vm-monitor-sample` and push its `Library/Logs/testvm/`, `.cursor/`, `.claude/` and `.codex/` folders to the VM's home. `images.txt` lists the screenshots the log points to. Push images to those paths in `/tmp/testvm/`.
-3. `testvm open "dist/VM Monitor.app"`. The Live view shows the VM's own screen, with the app inside it.
+3. `testvm open "dist/VM Peek.app"`. The Live view shows the VM's own screen, with the app inside it.
 4. Remove what you added. The VM's home can hold other test data, so delete only your files.
 
 `Scripts/screenshot.sh` does all of this for the README images, and cleans up after itself. Other agents can be using the VM, so pass it images of apps that are already public instead of capturing whatever is on the screen.
@@ -48,3 +48,7 @@ Don't open the app on your own screen to check a change. Test it in the VM with 
 - The updater trusts the GitHub release. Every release needs its `vX.Y.Z` tag, the zip from `Scripts/build-release.sh` attached, and an app version that matches the tag, or the app refuses the update.
 - Releases are signed with Flavio Copes's Developer ID (team `DGFKNTAG99`) with the hardened runtime, and notarized by `Scripts/build-release.sh` when the certificate is in the keychain and a notarytool profile named `notary` exists. CI and forks have no certificate, so the scripts sign ad hoc there and skip notarization.
 - The app isn't sandboxed, because it reads the agents' transcripts and runs `ssh` and `tart`.
+
+## Naming compatibility
+
+The public app name is VM Peek. Keep its existing bundle ID, saved data paths, URL schemes, CLI commands and internal Swift targets so installed copies and agent integrations remain compatible. Use the renamed checkout folder and GitHub repository in new links and build instructions.

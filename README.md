@@ -1,26 +1,26 @@
-<img src="docs/banner.png" alt="VM Monitor, a Mac app that shows what your coding agents do in the test VM" />
+<img src="docs/banner.png" alt="VM Peek, a Mac app that shows what your coding agents do in the test VM" />
 
-VM Monitor shows what your coding agents do in a macOS test VM. You see the VM's screen live, which agents are using it right now and for what, and every command each of them ran.
+VM Peek shows what your coding agents do in a macOS test VM. You see the VM's screen live, which agents are using it right now and for what, and every command each of them ran.
 
-I let coding agents test my Mac apps in a virtual machine, so they never take over my screen while I work. The catch is that I couldn't see what they did in there, or notice when two of them were in the VM at the same time. VM Monitor is the window into that VM.
+I let coding agents test my Mac apps in a virtual machine, so they never take over my screen while I work. The catch is that I couldn't see what they did in there, or notice when two of them were in the VM at the same time. VM Peek is the window into that VM.
 
-Here's VM Monitor in 30 seconds:
+Here's VM Peek in 30 seconds:
 
-[![Watch the 30-second VM Monitor demo](docs/showreel-poster.jpg)](https://flaviocopes.com/images/vm-monitor/demo.mp4)
+[![Watch the 30-second VM Peek demo](docs/showreel-poster.jpg)](https://flaviocopes.com/images/vm-peek/demo.mp4)
 
 ## Download
 
-Get `VM-Monitor-1.1.0.zip` from the [latest release](https://github.com/flaviocopes/vm-monitor/releases/latest), unzip it, and drag VM Monitor to your Applications folder. It runs on macOS 15 Sequoia or later, on Apple silicon and Intel Macs.
+Get `VM-Peek-1.2.0.zip` from the [latest release](https://github.com/flaviocopes/vm-peek/releases/latest), unzip it, and drag VM Peek to your Applications folder. It runs on macOS 15 Sequoia or later, on Apple silicon and Intel Macs.
 
 ### Opening it the first time
 
-VM Monitor is signed with my Apple Developer ID and notarized by Apple. The first time you open it, macOS asks if you're sure you want to open an app downloaded from the internet. Click **Open**.
+VM Peek is signed with my Apple Developer ID and notarized by Apple. The first time you open it, macOS asks if you're sure you want to open an app downloaded from the internet. Click **Open**.
 
-On a work laptop you might not be able to install apps in `/Applications`. You can keep VM Monitor in the `Applications` folder inside your home folder instead.
+On a work laptop you might not be able to install apps in `/Applications`. You can keep VM Peek in the `Applications` folder inside your home folder instead.
 
 ### Updates
 
-Once a day, VM Monitor asks GitHub whether there's a newer version. When there is, it shows what's new, and **Install and Relaunch** puts it in place of the old one. **VM Monitor → Check for Updates…** checks right away.
+Once a day, VM Peek asks GitHub whether there's a newer version. When there is, it shows what's new, and **Install and Relaunch** puts it in place of the old one. **VM Peek → Check for Updates…** checks right away.
 
 To turn off the daily check, run this in Terminal:
 
@@ -30,7 +30,7 @@ defaults write com.flaviocopes.vm-monitor AppUpdaterAutomaticChecks -bool false
 
 ## Set up the test VM
 
-VM Monitor watches a VM driven by [testvm](https://github.com/flaviocopes/testvm), a shell script with its own repo. Agents use it to open, screenshot and click through your app in the VM, and it logs every command they run. The VM runs under [Tart](https://tart.run), which needs an Apple silicon Mac.
+VM Peek watches a VM driven by [testvm](https://github.com/flaviocopes/testvm), a shell script with its own repo. Agents use it to open, screenshot and click through your app in the VM, and it logs every command they run. The VM runs under [Tart](https://tart.run), which needs an Apple silicon Mac.
 
 Install Tart, then put `testvm` somewhere in your `PATH`:
 
@@ -56,7 +56,7 @@ or click through it on this Mac. Do all of that in the test VM with `testvm`.
 Start with `testvm note` to say what you're testing.
 ```
 
-To test on a real Mac instead, like a Mac mini on your network, put `TEST_HOST=mini.local` and `TEST_USER=<you>` in `~/.config/testvm/config`. `testvm` and VM Monitor both use it. The [testvm README](https://github.com/flaviocopes/testvm#test-on-another-mac) shows how to set up that Mac, and has an agent skill for `testvm`.
+To test on a real Mac instead, like a Mac mini on your network, put `TEST_HOST=mini.local` and `TEST_USER=<you>` in `~/.config/testvm/config`. `testvm` and VM Peek both use it. The [testvm README](https://github.com/flaviocopes/testvm#test-on-another-mac) shows how to set up that Mac, and has an agent skill for `testvm`.
 
 ## Features
 
@@ -80,7 +80,7 @@ To test on a real Mac instead, like a Mac mini on your network, put `TEST_HOST=m
 
 ## Privacy
 
-VM Monitor reads files on your Mac: the log `testvm` writes in `~/Library/Logs/testvm`, and the first message of each agent chat, from Cursor's, Codex's and Claude Code's own transcript folders. It connects to the VM over SSH, with `testvm`'s key, to grab its screen and list the open apps. It never clicks, types or opens anything in the VM. Once a day, it asks GitHub whether there's a newer version of VM Monitor, and it downloads one only when you click **Install and Relaunch**. There are no accounts.
+VM Peek reads files on your Mac: the log `testvm` writes in `~/Library/Logs/testvm`, and the first message of each agent chat, from Cursor's, Codex's and Claude Code's own transcript folders. It connects to the VM over SSH, with `testvm`'s key, to grab its screen and list the open apps. It never clicks, types or opens anything in the VM. Once a day, it asks GitHub whether there's a newer version of VM Peek, and it downloads one only when you click **Install and Relaunch**. There are no accounts.
 
 ## Build it from source
 
@@ -91,7 +91,7 @@ swift test
 Scripts/build-app.sh
 ```
 
-The app is in `dist/VM Monitor.app`. To build the release zip, run:
+The app is in `dist/VM Peek.app`. To build the release zip, run:
 
 ```sh
 Scripts/build-release.sh
@@ -99,11 +99,8 @@ Scripts/build-release.sh
 
 It builds a universal app and zips it into `dist/`. With my Developer ID certificate in the keychain it signs and notarizes the app. Everywhere else it signs it ad hoc, so your copy is signed ad hoc. A copy you build yourself opens without a warning on your Mac.
 
-If you send it to another Mac, macOS says it "could not verify VM Monitor is free of malware". Click **Done**, then go to **System Settings → Privacy & Security** and click **Open Anyway**, or remove the quarantine flag in Terminal:
+If you send it to another Mac, macOS says it "could not verify VM Peek is free of malware". Click **Done**, then go to **System Settings → Privacy & Security** and click **Open Anyway**.
 
-```sh
-xattr -dr com.apple.quarantine "/Applications/VM Monitor.app"
-```
 
 ## Development
 
@@ -120,7 +117,7 @@ Working with an AI coding agent? Point it at [AGENTS.md](AGENTS.md). It has the 
 {"v":1,"event":"end","id":"20261003-190422-80779","time":1791047062.883,"status":0,"last":"/tmp/testvm/Skillscout-190422.png"}
 ```
 
-It tells the agents apart from their environment. Cursor sets `CURSOR_CONVERSATION_ID` and Codex sets `CODEX_THREAD_ID`. Claude Code sets neither, so `testvm` looks for the `claude` process up the process tree. What a command prints goes to `runs/<id>.txt`. VM Monitor reads the new lines every second, and finds each chat's first prompt in the agent's transcripts to say what it's working on.
+It tells the agents apart from their environment. Cursor sets `CURSOR_CONVERSATION_ID` and Codex sets `CODEX_THREAD_ID`. Claude Code sets neither, so `testvm` looks for the `claude` process up the process tree. What a command prints goes to `runs/<id>.txt`. VM Peek reads the new lines every second, and finds each chat's first prompt in the agent's transcripts to say what it's working on.
 
 ## License
 

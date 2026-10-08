@@ -1,12 +1,12 @@
 #!/bin/sh
-# Builds a universal (Apple silicon and Intel) dist/VM Monitor.app. It signs it with Flavio's
+# Builds a universal (Apple silicon and Intel) dist/VM Peek.app. It signs it with Flavio's
 # Developer ID when that certificate is in the keychain, and ad hoc everywhere else (CI, forks).
 
 set -eu
 
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 VERSION=$(sed -n 's/^ *static let version = "\(.*\)"$/\1/p' "$ROOT/Sources/VMMonitorApp/Version.swift")
-APP="$ROOT/dist/VM Monitor.app"
+APP="$ROOT/dist/VM Peek.app"
 CONTENTS="$APP/Contents"
 ICON_SOURCE="$ROOT/Assets/AppIcon.png"
 ICONSET="$ROOT/.build/AppIcon.iconset"
@@ -16,7 +16,7 @@ swift build -c release --arch arm64 --arch x86_64 --product VMMonitorApp
 
 rm -rf "$APP"
 mkdir -p "$CONTENTS/MacOS" "$CONTENTS/Resources"
-cp ".build/apple/Products/Release/VMMonitorApp" "$CONTENTS/MacOS/VM Monitor"
+cp ".build/apple/Products/Release/VMMonitorApp" "$CONTENTS/MacOS/VM Peek"
 
 rm -rf "$ICONSET"
 mkdir -p "$ICONSET"
@@ -35,9 +35,9 @@ cat > "$CONTENTS/Info.plist" <<PLIST
   <key>CFBundleDevelopmentRegion</key>
   <string>en</string>
   <key>CFBundleDisplayName</key>
-  <string>VM Monitor</string>
+  <string>VM Peek</string>
   <key>CFBundleExecutable</key>
-  <string>VM Monitor</string>
+  <string>VM Peek</string>
   <key>CFBundleIdentifier</key>
   <string>com.flaviocopes.vm-monitor</string>
   <key>CFBundleIconFile</key>
@@ -45,7 +45,7 @@ cat > "$CONTENTS/Info.plist" <<PLIST
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
   <key>CFBundleName</key>
-  <string>VM Monitor</string>
+  <string>VM Peek</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>

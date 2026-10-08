@@ -14,7 +14,7 @@ ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 TESTVM=$(command -v testvm) || { echo "Install testvm first: https://github.com/flaviocopes/testvm" >&2; exit 1; }
 BUILD="$ROOT/.build/screenshot"
-APP="$BUILD/VM Monitor Screenshot.app"
+APP="$BUILD/VM Peek Screenshot.app"
 REMOTE=/tmp/vm-monitor-screenshot
 TARGET=arm64-apple-macos15
 FLAGS="-O -swift-version 6 -parse-as-library -target $TARGET"
@@ -37,7 +37,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundleIdentifier</key>
   <string>com.flaviocopes.vm-monitor.screenshot</string>
   <key>CFBundleName</key>
-  <string>VM Monitor Screenshot</string>
+  <string>VM Peek Screenshot</string>
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>NSHighResolutionCapable</key>
@@ -64,14 +64,14 @@ for folder in Library/Logs/testvm .cursor .claude .codex; do
 done
 
 "$TESTVM" open "$APP" "$REMOTE" "$REMOTE/screen.png" -AppleLocale en_US -AppleLanguages '(en)' >/dev/null
-"$TESTVM" run 'while pgrep -f "VM Monitor Screenshot.app/Contents/MacOS" >/dev/null; do sleep 1; done'
+"$TESTVM" run 'while pgrep -f "VM Peek Screenshot.app/Contents/MacOS" >/dev/null; do sleep 1; done'
 for image in screenshot-light screenshot-dark chat-light chat-dark; do
   "$TESTVM" pull "$REMOTE/$image.png" docs/
 done
 
 # testvm keeps its own screenshots on this Mac, so /tmp/testvm in the VM only holds the ones pushed above.
-"$TESTVM" run "rm -rf $REMOTE /tmp/testvm ~/Library/Logs/testvm ~/.claude/projects/-Users-flavio-dev-noterepo \
-  ~/.cursor/projects/Users-flavio-dev-skillscout/agent-transcripts/7c1e2a4b-5d3f-4e8a-9b6c-1f2e3d4c5b6a \
-  ~/Apps/'VM Monitor Screenshot.app' ~/Apps/'VM Monitor Screenshot.log'; \
+"$TESTVM" run "rm -rf $REMOTE /tmp/testvm ~/Library/Logs/testvm ~/.claude/projects/-Users-flavio-dev-note-repo \
+  ~/.cursor/projects/Users-flavio-dev-skill-cabinet/agent-transcripts/7c1e2a4b-5d3f-4e8a-9b6c-1f2e3d4c5b6a \
+  ~/Apps/'VM Peek Screenshot.app' ~/Apps/'VM Peek Screenshot.log'; \
   find ~/.codex/sessions -name '*01a3f2c4-8b1d-7e20-9c4a-5f6e7d8c9b0a*' -delete 2>/dev/null; true"
 ls -la docs/screenshot-*.png docs/chat-*.png

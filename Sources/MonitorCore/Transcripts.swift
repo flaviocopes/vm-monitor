@@ -144,7 +144,7 @@ public enum Project {
     return URL(filePath: cwd).lastPathComponent
   }
 
-  /// `/Users/flavio/dev/skillscout` → `~/dev/skillscout`.
+  /// `/Users/flavio/dev/skill-cabinet` → `~/dev/skill-cabinet`.
   public static func tilde(_ path: String, home: String = NSHomeDirectory()) -> String {
     if path == home { return "~" }
     return path.hasPrefix(home + "/") ? "~" + path.dropFirst(home.count) : path

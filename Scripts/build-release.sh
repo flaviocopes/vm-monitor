@@ -1,6 +1,6 @@
 #!/bin/sh
 # Builds the universal app, notarizes it when it's signed with the Developer ID, staples the ticket,
-# checks the signature survives zipping, and writes dist/VM-Monitor-<version>.zip for a GitHub release.
+# checks the signature survives zipping, and writes dist/VM-Peek-<version>.zip for a GitHub release.
 # Notarizing needs the Developer ID certificate in the keychain and a notarytool profile named "notary":
 #   xcrun notarytool store-credentials notary --apple-id <apple id> --team-id DGFKNTAG99
 # Usage: Scripts/build-release.sh
@@ -9,14 +9,14 @@ set -eu
 ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 VERSION=$(sed -n 's/^ *static let version = "\(.*\)"$/\1/p' Sources/VMMonitorApp/Version.swift)
-APP="$ROOT/dist/VM Monitor.app"
-ZIP="$ROOT/dist/VM-Monitor-$VERSION.zip"
+APP="$ROOT/dist/VM Peek.app"
+ZIP="$ROOT/dist/VM-Peek-$VERSION.zip"
 CHECK=$(mktemp -d)
 trap 'rm -rf "$CHECK"' EXIT
 
 rm -f "$ZIP"
 Scripts/build-app.sh >/dev/null
-lipo "$APP/Contents/MacOS/VM Monitor" -verify_arch arm64 x86_64
+lipo "$APP/Contents/MacOS/VM Peek" -verify_arch arm64 x86_64
 
 TEAM=$(codesign -dv "$APP" 2>&1 | sed -n 's/^TeamIdentifier=//p')
 if [ "$TEAM" = DGFKNTAG99 ]; then
@@ -38,7 +38,7 @@ else
 fi
 
 ditto -x -k "$ZIP" "$CHECK"
-codesign --verify --deep --strict "$CHECK/VM Monitor.app"
+codesign --verify --deep --strict "$CHECK/VM Peek.app"
 
 echo "Built $ZIP, $SIGNATURE signed"
 shasum -a 256 "$ZIP"

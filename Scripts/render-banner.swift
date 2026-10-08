@@ -8,7 +8,7 @@
 import AppKit
 import SwiftUI
 
-let name = "VM Monitor"
+let name = "VM Peek"
 let tagline = "See what your coding agents\ndo in the test VM."
 let chips = ["Live screen", "Every command", "Who did what"]
 let size = CGSize(width: 1280, height: 560)

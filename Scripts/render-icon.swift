@@ -1,5 +1,5 @@
 #!/usr/bin/env swift
-// Renders the VM Monitor app icon: a display with a pulse line running across its screen and an amber
+// Renders the VM Peek app icon: a display with a pulse line running across its screen and an amber
 // live dot where the line ends, baked into a 1024px squircle on Apple's macOS icon grid.
 // Scripts/build-app.sh turns it into AppIcon.icns.
 // Usage: swift Scripts/render-icon.swift Assets/AppIcon.png
